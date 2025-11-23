@@ -38,15 +38,20 @@ function NavItem({ children, href }: NavItemProps) {
 
 const NAV_MENU = [
   {
-    name: "Page",
+    name: "Home",
     icon: RectangleStackIcon,
   },
   {
-    name: "Account",
+    name: "About",
     icon: UserCircleIcon,
   },
   {
-    name: "Docs",
+    name: "Projects",
+    icon: CommandLineIcon,
+    href: "https://www.material-tailwind.com/docs/react/installation",
+  },
+  {
+    name: "Blog",
     icon: CommandLineIcon,
     href: "https://www.material-tailwind.com/docs/react/installation",
   },
@@ -92,7 +97,7 @@ export function Navbar() {
           color={isScrolling ? "blue-gray" : "white"}
           className="text-lg font-bold"
         >
-          Material Tailwind
+          Software Studio OU
         </Typography>
         <ul
           className={`ml-10 hidden items-center gap-6 lg:flex ${
@@ -108,10 +113,10 @@ export function Navbar() {
         </ul>
         <div className="hidden items-center gap-4 lg:flex">
           <Button color={isScrolling ? "gray" : "white"} variant="text">
-            Log in
+            Invest
           </Button>
           <a href="https://www.material-tailwind.com/blocks" target="_blank">
-            <Button color={isScrolling ? "gray" : "white"}>blocks</Button>
+            <Button color={isScrolling ? "gray" : "white"}>Sign Up</Button>
           </a>
         </div>
         <IconButton
@@ -138,9 +143,9 @@ export function Navbar() {
             ))}
           </ul>
           <div className="mt-6 flex items-center gap-4">
-            <Button variant="text">Log in</Button>
+            <Button variant="text">Invest</Button>
             <a href="https://www.materila-tailwind.com/blocks" target="_blank">
-              <Button color="gray">blocks</Button>
+              <Button color="gray">Sign Up</Button>
             </a>
           </div>
         </div>
