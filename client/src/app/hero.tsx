@@ -11,13 +11,13 @@ function Hero() {
       <div className="grid min-h-screen px-8">
         <div className="container relative z-10 my-auto mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Logo on the left */}
-          <div className="flex justify-center lg:justify-start">
+          <div className="w-full">
             <Image
               src="/image/SoftwareStudioLogoWhite.png"
               alt="Software Studio Logo"
               width={300}
               height={300}
-              className="w-auto h-auto max-w-full"
+              className="w-full h-auto"
               priority
             />
           </div>

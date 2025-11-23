@@ -2,7 +2,7 @@
   "name": "nextjs-tailwind-event-landing-page",
   "version": "1.0.0",
   "private": true,
-  "author": "Creative Tim",
+  "author": "University of Oklahoma",
   "license": "See license in https://www.creative-tim.com/license",
   "homepage": "https://demos.creative-tim.com/nextjs-tailwind-event-landing-page",
   "scripts": {
@@ -14,7 +14,9 @@
   "dependencies": {
     "@heroicons/react": "2.0.18",
     "@material-tailwind/react": "2.1.2",
+    "@sanity/image-url": "^1.2.0",
     "next": "13.4.0",
+    "next-sanity": "^11.6.8",
     "react": "18",
     "react-dom": "18"
   },
