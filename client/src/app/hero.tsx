@@ -43,12 +43,16 @@ export const Hero = React.forwardRef<HTMLDivElement>(function Hero(props, ref) {
               by faculty, mentors, and guest entrepreneurs
             </Typography>
             <div className="flex items-center gap-4 justify-center lg:justify-end">
-              <Button variant="gradient" color="white">
-                SIGN UP
-              </Button>
-              <Button variant="gradient" color="gray">
-                Invest
-              </Button>
+              <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
+                <Button variant="gradient" color="white">
+                  SIGN UP
+                </Button>
+              </a>
+              <a href="https://forms.gle/odC79LhjZ3me5QYu9" target="_blank">
+                <Button variant="gradient" color="gray">
+                  Invest
+                </Button>
+              </a>
               {/* <IconButton className="rounded-full bg-white p-6">
                 <PlayIcon className="h-4 w-4 text-gray-900" />
               </IconButton> */}

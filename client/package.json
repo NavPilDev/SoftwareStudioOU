@@ -1,10 +1,10 @@
 {
-  "name": "nextjs-tailwind-event-landing-page",
+  "name": "William Kerber's Software Studio",
   "version": "1.0.0",
   "private": true,
   "author": "University of Oklahoma",
-  "license": "See license in https://www.creative-tim.com/license",
-  "homepage": "https://demos.creative-tim.com/nextjs-tailwind-event-landing-page",
+  "license": "MIT",
+  "homepage": "https://softwarestudioou.com",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

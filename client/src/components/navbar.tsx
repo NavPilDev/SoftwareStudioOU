@@ -162,10 +162,12 @@ export function Navbar({
           ))}
         </ul>
         <div className="hidden items-center gap-4 lg:flex">
-          <Button color={isScrolling ? "gray" : "white"} variant="text">
-            Invest
-          </Button>
-          <a href="https://www.material-tailwind.com/blocks" target="_blank">
+          <a href="https://forms.gle/odC79LhjZ3me5QYu9" target="_blank">
+            <Button color={isScrolling ? "gray" : "white"} variant="text">
+              Invest
+            </Button>
+          </a>
+          <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
             <Button color={isScrolling ? "gray" : "white"}>Sign Up</Button>
           </a>
         </div>
