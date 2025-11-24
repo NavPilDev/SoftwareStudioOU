@@ -23,32 +23,35 @@ const urlFor = (source: SanityImageSource) =>
 const options = { next: { revalidate: 30 } };
 
 export default async function BlogPage() {
-  const posts = await client.fetch<Array<{
-    _id: string;
-    title: string;
-    slug: { current: string };
-    publishedAt: string;
-    image?: SanityImageSource;
-    excerpt?: string;
-  }>>(POSTS_QUERY, {}, options);
+  const posts = await client.fetch<
+    Array<{
+      _id: string;
+      title: string;
+      slug: { current: string };
+      publishedAt: string;
+      image?: SanityImageSource;
+      excerpt?: string;
+    }>
+  >(POSTS_QUERY, {}, options);
 
   return (
     <>
       <Navbar />
       <main className="min-h-screen bg-white">
-        <section className="container mx-auto px-4 py-20">
+        <section className="container mx-auto px-4 pt-32 pb-20">
           <div className="text-center mb-16">
-            <h1 className="text-5xl font-bold text-gray-900 mb-4">
-              Blog
-            </h1>
+            <h1 className="text-5xl font-bold text-gray-900 mb-4">Blog</h1>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Stay updated with the latest news, insights, and stories from Software Studio OU
+              Stay updated with the latest news, insights, and stories from
+              Software Studio OU
             </p>
           </div>
 
           {posts.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-gray-500 text-lg">No blog posts yet. Check back soon!</p>
+              <p className="text-gray-500 text-lg">
+                No blog posts yet. Check back soon!
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -76,4 +79,3 @@ export default async function BlogPage() {
     </>
   );
 }
-

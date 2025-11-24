@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Navbar as MTNavbar,
   Collapse,
@@ -30,12 +31,15 @@ function NavItem({ children, href, onClick }: NavItemProps) {
     }
   };
 
+  // Check if href is external (starts with http:// or https://)
+  const isExternal = href?.startsWith("http://") || href?.startsWith("https://");
+
   return (
     <li>
       <Typography
         as="a"
         href={href || "#"}
-        target={href ? "_blank" : "_self"}
+        target={isExternal ? "_blank" : "_self"}
         variant="paragraph"
         className="flex items-center gap-2 font-medium cursor-pointer"
         onClick={onClick ? handleClick : undefined}
@@ -76,29 +80,39 @@ export function Navbar({
   projectsRef?: React.RefObject<HTMLDivElement>;
   homeRef?: React.RefObject<HTMLDivElement>;
 }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHomePage = pathname === "/";
+
   const [open, setOpen] = React.useState(false);
-  const [isScrolling, setIsScrolling] = React.useState(false);
+  const [isScrolling, setIsScrolling] = React.useState(!isHomePage);
 
   const handleOpen = () => setOpen((cur) => !cur);
 
   const scrollToAbout = () => {
-    if (aboutRef?.current) {
+    if (isHomePage && aboutRef?.current) {
       aboutRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push("/#about");
     }
   };
 
   const scrollToProjects = () => {
-    if (projectsRef?.current) {
+    if (isHomePage && projectsRef?.current) {
       projectsRef.current.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
+    } else {
+      router.push("/#projects");
     }
   };
 
   const scrollToHome = () => {
-    if (homeRef?.current) {
+    if (isHomePage && homeRef?.current) {
       homeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else {
+      router.push("/#home");
     }
   };
 
@@ -110,6 +124,11 @@ export function Navbar({
   }, []);
 
   React.useEffect(() => {
+    if (!isHomePage) {
+      setIsScrolling(true);
+      return;
+    }
+
     function handleScroll() {
       if (window.scrollY > 0) {
         setIsScrolling(true);
@@ -117,6 +136,9 @@ export function Navbar({
         setIsScrolling(false);
       }
     }
+
+    // Set initial state based on scroll position
+    handleScroll();
 
     window.addEventListener("scroll", handleScroll);
 
