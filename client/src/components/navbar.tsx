@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import {
   Navbar as MTNavbar,
   Collapse,
@@ -131,12 +132,27 @@ export function Navbar({
       className="fixed top-0 z-50 border-0"
     >
       <div className="container mx-auto flex items-center justify-between">
-        <Typography
-          color={isScrolling ? "blue-gray" : "white"}
-          className="text-lg font-bold"
-        >
-          Software Studio OU
-        </Typography>
+        {isScrolling ? (
+          <button onClick={scrollToHome} className="flex items-center">
+            <Image
+              src="/image/SoftwareStudioLogoBlack.png"
+              alt="Software Studio OU"
+              width={120}
+              height={50}
+              className="w-auto"
+            />
+          </button>
+        ) : (
+          <button onClick={scrollToHome} className="flex items-center">
+            <Image
+              src="/image/SoftwareStudioLogoWhite.png"
+              alt="Software Studio OU"
+              width={120}
+              height={50}
+              className="w-auto"
+            />
+          </button>
+        )}
         <ul
           className={`ml-10 hidden items-center gap-6 lg:flex ${
             isScrolling ? "text-gray-900" : "text-white"
