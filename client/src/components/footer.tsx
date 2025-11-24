@@ -22,9 +22,11 @@ export function Footer() {
             tech startup.
           </Typography>
           <div className="flex w-full md:w-fit gap-3 mt-2 flex-col md:flex-row">
-            <Button color="white" size="md">
-              Sign Up
-            </Button>
+            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
+              <Button color="white" size="md">
+                Sign Up
+              </Button>
+            </a>
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center !justify-between">

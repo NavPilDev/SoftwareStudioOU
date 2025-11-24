@@ -7,14 +7,15 @@ import Hero from "./hero";
 import SponsoredBy from "./sponsored-by";
 import AboutEvent from "./about-event";
 import OurStats from "./our-stats";
-import EventContent from "./event-content";
-import Faq from "./faq";
-import React, { useRef, useEffect } from "react";
+import Projects from "./projects";
+import Faq, { type FAQItem } from "./faq";
+import React, { useRef, useEffect, useState } from "react";
 
 export default function Portfolio() {
   const homeRef = useRef<HTMLDivElement>(null);
   const aboutRef = useRef<HTMLDivElement>(null);
   const projectsRef = useRef<HTMLDivElement>(null);
+  const [faqs, setFaqs] = useState<FAQItem[]>([]);
 
   useEffect(() => {
     const hash = window.location.hash;
@@ -33,6 +34,25 @@ export default function Portfolio() {
     }
   }, []);
 
+  useEffect(() => {
+    async function fetchFAQs() {
+      try {
+        const response = await fetch("/api/faqs");
+        if (response.ok) {
+          const fetchedFaqs = await response.json();
+          setFaqs(fetchedFaqs);
+        } else {
+          console.error("Failed to fetch FAQs");
+          setFaqs([]);
+        }
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+        setFaqs([]);
+      }
+    }
+    fetchFAQs();
+  }, []);
+
   return (
     <>
       <Navbar aboutRef={aboutRef} projectsRef={projectsRef} homeRef={homeRef} />
@@ -45,9 +65,9 @@ export default function Portfolio() {
       </div>
       {/* <OurStats /> */}
       <div id="projects" ref={projectsRef}>
-        <EventContent />
+        <Projects />
       </div>
-      <Faq />
+      <Faq faqs={faqs} />
       <Footer />
     </>
   );
