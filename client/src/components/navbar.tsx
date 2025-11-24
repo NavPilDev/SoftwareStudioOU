@@ -63,7 +63,7 @@ const NAV_MENU = [
   {
     name: "Blog",
     icon: CommandLineIcon,
-    href: "https://www.material-tailwind.com/docs/react/installation",
+    href: "/blog",
   },
 ];
 
