@@ -38,13 +38,14 @@ export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
         variant="lead"
         className="mt-2 lg:max-w-4xl mb-8 w-full text-center font-normal !text-gray-500"
       >
-        William Kerber's Software Studio allows students to build real products,
-        learn from industry leaders, and launch their tech startups. We have
-        weekly sessions where we have guest speakers, workshops, and project
-        building sessions. Software Studio takes place over two semesters. While
-        this is a club, students can also take it for credit(see FAQ). Software
-        Studio is a great way to get started in entrepreneurship and innovation,
-        while also making valuable connections along the way.
+        William Kerber&apos;s Software Studio allows students to build real
+        products, learn from industry leaders, and launch their tech startups.
+        We have weekly sessions where we have guest speakers, workshops, and
+        project building sessions. Software Studio takes place over two
+        semesters. While this is a club, students can also take it for
+        credit(see FAQ). Software Studio is a great way to get started in
+        entrepreneurship and innovation, while also making valuable connections
+        along the way.
       </Typography>
       <div className="mt-8 w-full grid grid-cols-1 md:grid-cols-2 gap-4 ">
         {EVENT_INFO.map((props, idx) => (
