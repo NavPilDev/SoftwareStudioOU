@@ -10,9 +10,9 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: "NextJS Tailwind Event Landing Page",
+  title: "William Kerber's Software Studio",
   description:
-    "Introducing Tailwind Event Landing Page, a dynamic and visually appealing landing page template designed using Tailwind CSS and Material Tailwind.",
+    "William Kerber's Software Studio is a two-semester program where OU students form teams, pitch ideas, build prototypes, and launch tech products — guided by faculty, mentors, and guest entrepreneurs.",
 };
 
 export default function RootLayout({

@@ -19,9 +19,9 @@ export default function Portfolio() {
     <>
       <Navbar aboutRef={aboutRef} projectsRef={projectsRef} homeRef={homeRef} />
       <Hero ref={homeRef} />
-      <SponsoredBy />
+      {/* <SponsoredBy /> */}
       <AboutEvent ref={aboutRef} />
-      <OurStats />
+      {/* <OurStats /> */}
       <EventContent ref={projectsRef} />
       <Faq />
       <Footer />
