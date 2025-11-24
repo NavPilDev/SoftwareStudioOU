@@ -32,7 +32,8 @@ function NavItem({ children, href, onClick }: NavItemProps) {
   };
 
   // Check if href is external (starts with http:// or https://)
-  const isExternal = href?.startsWith("http://") || href?.startsWith("https://");
+  const isExternal =
+    href?.startsWith("http://") || href?.startsWith("https://");
 
   return (
     <li>
