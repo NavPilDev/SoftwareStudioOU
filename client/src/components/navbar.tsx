@@ -22,7 +22,7 @@ interface NavItemProps {
 }
 
 function NavItem({ children, href, onClick }: NavItemProps) {
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleClick = (e: React.MouseEvent<HTMLElement>) => {
     if (onClick) {
       e.preventDefault();
       onClick();
@@ -37,7 +37,7 @@ function NavItem({ children, href, onClick }: NavItemProps) {
         target={href ? "_blank" : "_self"}
         variant="paragraph"
         className="flex items-center gap-2 font-medium cursor-pointer"
-        onClick={handleClick}
+        onClick={onClick ? handleClick : undefined}
       >
         {children}
       </Typography>
@@ -204,7 +204,7 @@ export function Navbar({
           </ul>
           <div className="mt-6 flex items-center gap-4">
             <Button variant="text">Invest</Button>
-            <a href="https://www.materila-tailwind.com/blocks" target="_blank">
+            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
               <Button color="gray">Sign Up</Button>
             </a>
           </div>
