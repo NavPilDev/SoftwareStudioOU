@@ -18,9 +18,17 @@ import {
 interface NavItemProps {
   children: React.ReactNode;
   href?: string;
+  onClick?: () => void;
 }
 
-function NavItem({ children, href }: NavItemProps) {
+function NavItem({ children, href, onClick }: NavItemProps) {
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (onClick) {
+      e.preventDefault();
+      onClick();
+    }
+  };
+
   return (
     <li>
       <Typography
@@ -28,7 +36,8 @@ function NavItem({ children, href }: NavItemProps) {
         href={href || "#"}
         target={href ? "_blank" : "_self"}
         variant="paragraph"
-        className="flex items-center gap-2 font-medium"
+        className="flex items-center gap-2 font-medium cursor-pointer"
+        onClick={handleClick}
       >
         {children}
       </Typography>
@@ -57,11 +66,40 @@ const NAV_MENU = [
   },
 ];
 
-export function Navbar() {
+export function Navbar({
+  aboutRef,
+  projectsRef,
+  homeRef,
+}: {
+  aboutRef?: React.RefObject<HTMLDivElement>;
+  projectsRef?: React.RefObject<HTMLDivElement>;
+  homeRef?: React.RefObject<HTMLDivElement>;
+}) {
   const [open, setOpen] = React.useState(false);
   const [isScrolling, setIsScrolling] = React.useState(false);
 
   const handleOpen = () => setOpen((cur) => !cur);
+
+  const scrollToAbout = () => {
+    if (aboutRef?.current) {
+      aboutRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  const scrollToProjects = () => {
+    if (projectsRef?.current) {
+      projectsRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
+  };
+
+  const scrollToHome = () => {
+    if (homeRef?.current) {
+      homeRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   React.useEffect(() => {
     window.addEventListener(
@@ -105,7 +143,19 @@ export function Navbar() {
           }`}
         >
           {NAV_MENU.map(({ name, icon: Icon, href }) => (
-            <NavItem key={name} href={href}>
+            <NavItem
+              key={name}
+              href={href}
+              onClick={
+                name === "About"
+                  ? scrollToAbout
+                  : name === "Projects"
+                  ? scrollToProjects
+                  : name === "Home"
+                  ? scrollToHome
+                  : undefined
+              }
+            >
               <Icon className="h-5 w-5" />
               <span>{name}</span>
             </NavItem>
@@ -136,7 +186,17 @@ export function Navbar() {
         <div className="container mx-auto mt-4 rounded-lg bg-white px-6 py-5">
           <ul className="flex flex-col gap-4 text-gray-900">
             {NAV_MENU.map(({ name, icon: Icon, href }) => (
-              <NavItem key={name} href={href}>
+              <NavItem
+                key={name}
+                href={href}
+                onClick={
+                  name === "About"
+                    ? scrollToAbout
+                    : name === "Home"
+                    ? scrollToHome
+                    : undefined
+                }
+              >
                 <Icon className="h-5 w-5" />
                 {name}
               </NavItem>

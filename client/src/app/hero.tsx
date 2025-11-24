@@ -3,11 +3,14 @@
 import Image from "next/image";
 import { IconButton, Button, Typography } from "@material-tailwind/react";
 import { PlayIcon } from "@heroicons/react/24/solid";
-
-function Hero() {
+import React from "react";
+export const Hero = React.forwardRef<HTMLDivElement>(function Hero(props, ref) {
   return (
-    <div className="relative min-h-screen w-full bg-[url('/image/hero.jpeg')] bg-cover bg-no-repeat">
-      <div className="absolute inset-0 h-full w-full bg-gray-900/60" />
+    <div
+      ref={ref}
+      className="relative min-h-screen w-full bg-[url('/image/hero.jpeg')] bg-cover bg-no-repeat"
+    >
+      <div className="absolute inset-0 h-full w-full bg-gray-900/80" />
       <div className="grid min-h-screen px-8">
         <div className="container relative z-10 my-auto mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
           {/* Logo on the left */}
@@ -41,17 +44,20 @@ function Hero() {
             </Typography>
             <div className="flex items-center gap-4 justify-center lg:justify-end">
               <Button variant="gradient" color="white">
-                Get started
+                SIGN UP
               </Button>
-              <IconButton className="rounded-full bg-white p-6">
+              <Button variant="gradient" color="gray">
+                Invest
+              </Button>
+              {/* <IconButton className="rounded-full bg-white p-6">
                 <PlayIcon className="h-4 w-4 text-gray-900" />
-              </IconButton>
+              </IconButton> */}
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
+});
 
 export default Hero;

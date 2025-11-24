@@ -1,7 +1,7 @@
 import { Typography, Button, IconButton } from "@material-tailwind/react";
 
 const CURRENT_YEAR = new Date().getFullYear();
-const LINKS = ["Company", "About Us", "Team", "Products", "Blog"];
+const LINKS = ["About", "Program", "Events", "Contact", "Resources"];
 
 export function Footer() {
   return (
@@ -12,29 +12,24 @@ export function Footer() {
             className="text-2xl md:text-3xl text-center font-bold "
             color="white"
           >
-            Join now and get 30% OFF!
+            Join Software Studio OU!
           </Typography>
           <Typography
             color="white"
             className=" md:w-7/12 text-center my-3 !text-base"
           >
-            Don&apos;t miss out on this exclusive offer that will end soon.
+            Build real products, learn from industry leaders, and launch your
+            tech startup.
           </Typography>
           <div className="flex w-full md:w-fit gap-3 mt-2 flex-col md:flex-row">
             <Button color="white" size="md">
-              buy ticket
+              Sign Up
             </Button>
           </div>
         </div>
         <div className="flex flex-col md:flex-row items-center !justify-between">
-          <Typography
-            as="a"
-            href="https://www.material-tailwind.com"
-            target="_blank"
-            variant="h6"
-            className="text-gray-900"
-          >
-            Material Tailwind
+          <Typography as="a" href="#" variant="h6" className="text-gray-900">
+            Software Studio OU
           </Typography>
           <ul className="flex justify-center my-4 md:my-0 w-max mx-auto items-center gap-4">
             {LINKS.map((link, index) => (
@@ -70,15 +65,8 @@ export function Footer() {
           color="blue-gray"
           className="text-center mt-12 font-normal !text-gray-700"
         >
-          &copy; {CURRENT_YEAR} Made with{" "}
-          <a href="https://www.material-tailwind.com" target="_blank">
-            Material Tailwind
-          </a>{" "}
-          by{" "}
-          <a href="https://www.creative-tim.com" target="_blank">
-            Creative Tim
-          </a>
-          .
+          &copy; {CURRENT_YEAR} Software Studio OU - University of Oklahoma. A
+          two-semester program for entrepreneurship and innovation.
         </Typography>
       </div>
     </footer>

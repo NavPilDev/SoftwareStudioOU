@@ -2,6 +2,7 @@
 
 import { Typography } from "@material-tailwind/react";
 import AboutCard from "@/components/about-card";
+import React from "react";
 
 const EVENT_INFO = [
   {
@@ -18,23 +19,28 @@ const EVENT_INFO = [
   },
 ];
 
-export function AboutEvent() {
+export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
+  props,
+  ref
+) {
   return (
-    <section className="container mx-auto flex flex-col items-center px-4 py-10">
+    <section
+      ref={ref}
+      className="container mx-auto flex flex-col items-center px-4 py-10"
+    >
       <Typography variant="h6" className="text-center mb-2" color="orange">
         About the event
       </Typography>
       <Typography variant="h3" className="text-center" color="blue-gray">
-        Why Attend?
+        Why Join?
       </Typography>
       <Typography
         variant="lead"
         className="mt-2 lg:max-w-4xl mb-8 w-full text-center font-normal !text-gray-500"
       >
-        Welcome to the AI Conference 2023, where the future unfolds! Whether
-        you&apos;re a seasoned AI professional, a curious newcomer, or a
-        business leader looking to harness the power of AI, this conference is
-        designed to inspire, educate, and connect.
+        Hands-on skills in design, AI, cloud, APIs, security, and DevOps. Learn
+        from startup founders & industry leaders Build real products with peers
+        and pitch your final product at the OU showcase in April
       </Typography>
       <div className="mt-8 w-full grid grid-cols-1 md:grid-cols-2 gap-4 ">
         {EVENT_INFO.map((props, idx) => (
@@ -50,6 +56,6 @@ export function AboutEvent() {
       </div>
     </section>
   );
-}
+});
 
 export default AboutEvent;
