@@ -1,6 +1,12 @@
 "use client";
 
-import { Tab, Tabs, TabsHeader, Typography, Button } from "@material-tailwind/react";
+import {
+  Tab,
+  Tabs,
+  TabsHeader,
+  Typography,
+  Button,
+} from "@material-tailwind/react";
 import EventContentCard from "@/components/event-content-card";
 import React, { useState, useEffect } from "react";
 import imageUrlBuilder from "@sanity/image-url";
@@ -30,7 +36,9 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
   ref
 ) {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number | string | null>(null);
+  const [selectedYear, setSelectedYear] = useState<number | string | null>(
+    null
+  );
   const [availableYears, setAvailableYears] = useState<number[]>([]);
   const [nextYear, setNextYear] = useState<number | null>(null);
 
@@ -49,7 +57,10 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
           setAvailableYears(years);
 
           // Calculate next year (last tab year + 1)
-          const lastTabYear = years.length > 0 ? years[years.length - 1] : new Date().getFullYear();
+          const lastTabYear =
+            years.length > 0
+              ? years[years.length - 1]
+              : new Date().getFullYear();
           setNextYear(lastTabYear + 1);
 
           // Set default to most recent year
@@ -65,10 +76,11 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
     fetchProjects();
   }, []);
 
-  const isNextYearTab = selectedYear === 'next-year';
-  const filteredProjects = selectedYear && typeof selectedYear === 'number'
-    ? projects.filter((p) => p.year === selectedYear)
-    : [];
+  const isNextYearTab = selectedYear === "next-year";
+  const filteredProjects =
+    selectedYear && typeof selectedYear === "number"
+      ? projects.filter((p) => p.year === selectedYear)
+      : [];
 
   return (
     <section
@@ -101,7 +113,7 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
                 <Tab
                   value="next-year"
                   className="font-medium"
-                  onClick={() => setSelectedYear('next-year')}
+                  onClick={() => setSelectedYear("next-year")}
                 >
                   {nextYear}
                 </Tab>
@@ -113,16 +125,22 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
       <div className="mx-auto container">
         {isNextYearTab ? (
           <div className="text-center py-16 max-w-2xl mx-auto">
-            <Typography variant="h3" color="blue-gray" className="mb-4 font-bold">
+            <Typography
+              variant="h3"
+              color="blue-gray"
+              className="mb-4 font-bold"
+            >
               Join Us in {nextYear}!
             </Typography>
-            <Typography
-              variant="lead"
-              className="mb-8 !text-gray-600"
-            >
-              Be part of the next generation of innovative projects. Sign up now to participate in Software Studio OU {nextYear}.
+            <Typography variant="lead" className="mb-8 !text-gray-600">
+              Be part of the next generation of innovative projects. Sign up now
+              to participate in Software Studio OU {nextYear}.
             </Typography>
-            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank" rel="noopener noreferrer">
+            <a
+              href="https://forms.gle/PYWTVEEeprE7APmZ8"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <Button color="gray" size="lg" className="mt-4">
                 Sign Up Now
               </Button>
