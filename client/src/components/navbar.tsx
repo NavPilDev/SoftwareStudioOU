@@ -63,7 +63,6 @@ const NAV_MENU = [
   {
     name: "Projects",
     icon: CommandLineIcon,
-    href: "https://www.material-tailwind.com/docs/react/installation",
   },
   {
     name: "Blog",
@@ -89,6 +88,7 @@ export function Navbar({
   const [isScrolling, setIsScrolling] = React.useState(!isHomePage);
 
   const handleOpen = () => setOpen((cur) => !cur);
+  const closeMenu = () => setOpen(false);
 
   const scrollToAbout = () => {
     if (isHomePage && aboutRef?.current) {
@@ -115,6 +115,36 @@ export function Navbar({
     } else {
       router.push("/#home");
     }
+  };
+
+  // Wrapper functions that close the menu after navigation
+  const scrollToAboutAndClose = () => {
+    scrollToAbout();
+    // Delay closing menu to allow scroll to start
+    setTimeout(() => {
+      closeMenu();
+    }, 300);
+  };
+
+  const scrollToProjectsAndClose = () => {
+    scrollToProjects();
+    // Delay closing menu to allow scroll to start
+    setTimeout(() => {
+      closeMenu();
+    }, 300);
+  };
+
+  const scrollToHomeAndClose = () => {
+    scrollToHome();
+    // Delay closing menu to allow scroll to start
+    setTimeout(() => {
+      closeMenu();
+    }, 300);
+  };
+
+  const navigateToBlogAndClose = () => {
+    router.push("/blog");
+    closeMenu();
   };
 
   React.useEffect(() => {
@@ -232,9 +262,13 @@ export function Navbar({
                 href={href}
                 onClick={
                   name === "About"
-                    ? scrollToAbout
+                    ? scrollToAboutAndClose
+                    : name === "Projects"
+                    ? scrollToProjectsAndClose
                     : name === "Home"
-                    ? scrollToHome
+                    ? scrollToHomeAndClose
+                    : name === "Blog"
+                    ? navigateToBlogAndClose
                     : undefined
                 }
               >
@@ -244,8 +278,18 @@ export function Navbar({
             ))}
           </ul>
           <div className="mt-6 flex items-center gap-4">
-            <Button variant="text">Invest</Button>
-            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
+            <a
+              href="https://forms.gle/odC79LhjZ3me5QYu9"
+              target="_blank"
+              onClick={closeMenu}
+            >
+              <Button variant="text">Invest</Button>
+            </a>
+            <a
+              href="https://forms.gle/PYWTVEEeprE7APmZ8"
+              target="_blank"
+              onClick={closeMenu}
+            >
               <Button color="gray">Sign Up</Button>
             </a>
           </div>
