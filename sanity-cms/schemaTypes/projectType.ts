@@ -45,6 +45,15 @@ export const projectType = defineType({
       },
     }),
     defineField({
+      name: 'teamImage',
+      type: 'image',
+      title: 'Team Profile Picture',
+      description: 'Profile picture for the team member/creator',
+      options: {
+        hotspot: true,
+      },
+    }),
+    defineField({
       name: 'year',
       type: 'number',
       title: 'Year',

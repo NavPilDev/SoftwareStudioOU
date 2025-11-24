@@ -14,6 +14,7 @@ interface EventContentCardProps {
   position: string;
   panel: string;
   img: string;
+  profileImg?: string;
 }
 export function EventContentCard({
   title,
@@ -22,6 +23,7 @@ export function EventContentCard({
   position,
   panel,
   img,
+  profileImg,
 }: EventContentCardProps) {
   return (
     <Card
@@ -55,8 +57,8 @@ export function EventContentCard({
         <div className="flex items-center gap-4">
           <Avatar
             variant="circular"
-            src="/logos/spotify-logo.png"
-            alt="spotify"
+            src={profileImg || "/logos/spotify-logo.png"}
+            alt={name || "team member"}
             size="lg"
           />
           <div>

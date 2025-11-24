@@ -9,6 +9,7 @@ const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _cre
   position,
   category,
   image,
+  teamImage,
   year,
   order
 }`;
@@ -28,6 +29,7 @@ export async function GET(request: Request) {
         position,
         category,
         image,
+        teamImage,
         year,
         order
       }`;
