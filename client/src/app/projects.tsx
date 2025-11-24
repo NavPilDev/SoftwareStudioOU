@@ -51,9 +51,9 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
           setProjects(fetchedProjects);
 
           // Extract unique years and sort them
-          const years = Array.from(
+          const years = Array.from<number>(
             new Set(fetchedProjects.map((p: ProjectItem) => p.year))
-          ).sort((a, b) => b - a) as number[];
+          ).sort((a, b) => b - a);
           setAvailableYears(years);
 
           // Calculate next year (last tab year + 1)
@@ -161,11 +161,11 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
             return (
               <EventContentCard
                 key={project._id}
-                title={project.title}
-                des={project.description}
-                name={project.name}
-                position={project.position}
-                panel={project.category}
+                title={project.title || ""}
+                des={project.description || ""}
+                name={project.name || ""}
+                position={project.position || ""}
+                panel={project.category || ""}
                 img={imageUrl || "/image/avatar1.jpg"}
               />
             );
