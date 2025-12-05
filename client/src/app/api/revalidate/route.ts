@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
             // Sanity webhook format - we need to fetch the document to get its type
             // For now, we'll revalidate everything if we get this format
             // In production, you might want to fetch the document from Sanity to get its type
-            revalidatePath("/");
+            revalidatePath("/", "layout");
             revalidatePath("/blog");
             revalidatePath("/api/projects");
             revalidatePath("/api/faqs");
@@ -52,17 +52,17 @@ export async function POST(request: NextRequest) {
         switch (documentType) {
             case "project":
                 revalidatePath("/api/projects");
-                revalidatePath("/");
+                revalidatePath("/", "layout");
                 break;
 
             case "faq":
                 revalidatePath("/api/faqs");
-                revalidatePath("/");
+                revalidatePath("/", "layout");
                 break;
 
             case "adminTeamMember":
                 revalidatePath("/api/admin-team-members");
-                revalidatePath("/");
+                revalidatePath("/", "layout");
                 break;
 
             case "post":
@@ -73,12 +73,12 @@ export async function POST(request: NextRequest) {
                     revalidatePath(`/${slug.current}`);
                 }
                 // Also revalidate all post pages (for when posts are deleted)
-                revalidatePath("/[slug]");
+                revalidatePath("/[slug]", "page");
                 break;
 
             default:
                 // If type is unknown, revalidate everything
-                revalidatePath("/");
+                revalidatePath("/", "layout");
                 revalidatePath("/blog");
                 revalidatePath("/api/projects");
                 revalidatePath("/api/faqs");

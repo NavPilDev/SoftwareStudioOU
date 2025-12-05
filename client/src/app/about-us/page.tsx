@@ -8,11 +8,28 @@ import { client } from "@/sanity/client";
 import Image from "next/image";
 import { Navbar, Footer } from "@/components";
 
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-    projectId && dataset
-        ? imageUrlBuilder({ projectId, dataset }).image(source)
-        : null;
+// Get config - fallback to hardcoded values if config() doesn't work
+let projectId: string | undefined;
+let dataset: string | undefined;
+try {
+    const config = client.config();
+    projectId = config?.projectId;
+    dataset = config?.dataset;
+} catch (error) {
+    // Fallback to hardcoded values
+    projectId = "xwlnwgbx";
+    dataset = "production";
+}
+
+const urlFor = (source: SanityImageSource) => {
+    if (!projectId || !dataset || !source) return null;
+    try {
+        return imageUrlBuilder({ projectId, dataset }).image(source);
+    } catch (error) {
+        console.error("Error creating image URL builder:", error);
+        return null;
+    }
+};
 
 export interface AdminTeamMemberItem {
     _id: string;

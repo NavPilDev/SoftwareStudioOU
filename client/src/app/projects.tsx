@@ -13,11 +13,28 @@ import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
+// Get config - fallback to hardcoded values if config() doesn't work
+let projectId: string | undefined;
+let dataset: string | undefined;
+try {
+  const config = client.config();
+  projectId = config?.projectId;
+  dataset = config?.dataset;
+} catch (error) {
+  // Fallback to hardcoded values
+  projectId = "xwlnwgbx";
+  dataset = "production";
+}
+
+const urlFor = (source: SanityImageSource) => {
+  if (!projectId || !dataset || !source) return null;
+  try {
+    return imageUrlBuilder({ projectId, dataset }).image(source);
+  } catch (error) {
+    console.error("Error creating image URL builder:", error);
+    return null;
+  }
+};
 
 export interface ProjectItem {
   _id: string;
@@ -49,6 +66,15 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
         const response = await fetch("/api/projects");
         if (response.ok) {
           const fetchedProjects = await response.json();
+          // Debug: log first project to see image data structure
+          if (fetchedProjects.length > 0) {
+            console.log("Sample project data:", {
+              hasImage: !!fetchedProjects[0].image,
+              hasProfilePicture: !!fetchedProjects[0].profilePicture,
+              image: fetchedProjects[0].image,
+              profilePicture: fetchedProjects[0].profilePicture,
+            });
+          }
           setProjects(fetchedProjects);
 
           // Extract unique years and sort them
@@ -159,9 +185,15 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
               ? urlFor(project.image)?.width(768).height(768).url()
               : "/image/avatar1.jpg";
 
-            const profilePictureUrl = project.profilePicture
-              ? urlFor(project.profilePicture)?.width(200).height(200).url()
-              : undefined;
+            let profilePictureUrl: string | undefined = undefined;
+            if (project.profilePicture) {
+              try {
+                const url = urlFor(project.profilePicture)?.width(200).height(200).url();
+                profilePictureUrl = url || undefined;
+              } catch (error) {
+                console.error("Error building profile picture URL:", error, project.profilePicture);
+              }
+            }
 
             return (
               <EventContentCard

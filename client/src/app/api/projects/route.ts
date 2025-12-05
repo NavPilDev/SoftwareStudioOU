@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const year = searchParams.get('year');
-    
+
     let query = PROJECTS_QUERY;
     if (year) {
       query = `*[_type == "project" && year == ${year}] | order(order asc, _createdAt asc) {
@@ -34,7 +34,7 @@ export async function GET(request: Request) {
         order
       }`;
     }
-    
+
     const projects = await client.fetch(query, {}, {
       next: { revalidate: 30 }
     });

@@ -1,9 +1,35 @@
+"use client";
+
 import { Typography, Button, IconButton } from "@material-tailwind/react";
+import { useState, useEffect } from "react";
 
 const CURRENT_YEAR = new Date().getFullYear();
-const LINKS = ["About", "Program", "Events", "Contact", "Resources"];
+interface ContactInfo {
+  _id: string;
+  prefix?: string;
+  fullName: string;
+  email: string;
+}
 
 export function Footer() {
+  const [contactInfo, setContactInfo] = useState<ContactInfo[]>([]);
+
+  useEffect(() => {
+    async function fetchContactInfo() {
+      try {
+        const response = await fetch("/api/contact-info");
+        if (response.ok) {
+          const fetchedContactInfo = await response.json();
+          setContactInfo(fetchedContactInfo);
+        }
+      } catch (error) {
+        console.error("Error fetching contact info:", error);
+        setContactInfo([]);
+      }
+    }
+    fetchContactInfo();
+  }, []);
+
   return (
     <footer className="pb-5 p-10 md:pt-10">
       <div className="container flex flex-col mx-auto">
@@ -34,19 +60,7 @@ export function Footer() {
             OU William Kerber Software Studio
           </Typography>
           <ul className="flex justify-center my-4 md:my-0 w-max mx-auto items-center gap-4">
-            {LINKS.map((link, index) => (
-              <li key={index}>
-                <Typography
-                  as="a"
-                  href="#"
-                  variant="small"
-                  color="white"
-                  className="font-normal !text-gray-700 hover:!text-gray-900 transition-colors"
-                >
-                  {link}
-                </Typography>
-              </li>
-            ))}
+
           </ul>
           <div className="flex w-fit justify-center gap-2">
             <IconButton size="sm" color="gray" variant="text">
@@ -63,13 +77,48 @@ export function Footer() {
             </IconButton>
           </div>
         </div>
+
+        {contactInfo.length > 0 && (
+          <div className="mt-8 text-center">
+            <Typography
+              variant="h6"
+              className="mb-4 font-semibold !text-gray-900"
+            >
+
+              Contact
+            </Typography>
+            <div className="flex flex-row items-center justify-center gap-8 w-full">
+              {contactInfo.map((contact) => (
+                <div key={contact._id} className="mb-2">
+                  <Typography
+                    variant="small"
+                    className="font-bold !text-gray-700"
+                  >
+                    {contact.prefix ? `${contact.prefix} ` : ""}
+                    {contact.fullName}
+                  </Typography>
+                  <Typography
+                    variant="small"
+                    className="font-normal !text-gray-600"
+                  >
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="hover:!text-gray-900 transition-colors"
+                    >
+                      {contact.email}
+                    </a>
+                  </Typography>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         <Typography
           color="blue-gray"
           className="text-center mt-12 font-normal !text-gray-700"
         >
-          &copy; {CURRENT_YEAR} OU William Kerber Software Studio - University
-          of Oklahoma. A two-semester program for entrepreneurship and
-          innovation.
+          &copy; {CURRENT_YEAR} OU William Kerber Software Studio
         </Typography>
       </div>
     </footer>
