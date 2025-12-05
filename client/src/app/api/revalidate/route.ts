@@ -30,11 +30,12 @@ export async function POST(request: NextRequest) {
             // Sanity webhook format - we need to fetch the document to get its type
             // For now, we'll revalidate everything if we get this format
             // In production, you might want to fetch the document from Sanity to get its type
-            revalidatePath("/", "layout");
+            revalidatePath("/");
             revalidatePath("/blog");
             revalidatePath("/api/projects");
             revalidatePath("/api/faqs");
             revalidatePath("/api/admin-team-members");
+            revalidatePath("/api/contact-info");
 
             return NextResponse.json({
                 revalidated: true,
@@ -52,17 +53,22 @@ export async function POST(request: NextRequest) {
         switch (documentType) {
             case "project":
                 revalidatePath("/api/projects");
-                revalidatePath("/", "layout");
+                revalidatePath("/");
                 break;
 
             case "faq":
                 revalidatePath("/api/faqs");
-                revalidatePath("/", "layout");
+                revalidatePath("/");
                 break;
 
             case "adminTeamMember":
                 revalidatePath("/api/admin-team-members");
-                revalidatePath("/", "layout");
+                revalidatePath("/");
+                break;
+
+            case "contactInfo":
+                revalidatePath("/api/contact-info");
+                revalidatePath("/");
                 break;
 
             case "post":
@@ -73,16 +79,17 @@ export async function POST(request: NextRequest) {
                     revalidatePath(`/${slug.current}`);
                 }
                 // Also revalidate all post pages (for when posts are deleted)
-                revalidatePath("/[slug]", "page");
+                revalidatePath("/[slug]");
                 break;
 
             default:
                 // If type is unknown, revalidate everything
-                revalidatePath("/", "layout");
+                revalidatePath("/");
                 revalidatePath("/blog");
                 revalidatePath("/api/projects");
                 revalidatePath("/api/faqs");
                 revalidatePath("/api/admin-team-members");
+                revalidatePath("/api/contact-info");
         }
 
         return NextResponse.json({

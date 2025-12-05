@@ -7,6 +7,7 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
+import { ChevronDownIcon } from "@heroicons/react/24/solid";
 
 export interface FAQItem {
   _id: string;
@@ -34,9 +35,7 @@ export function Faq({ faqs }: FaqProps) {
             variant="lead"
             className="mx-auto mb-24 lg:w-3/5 !text-gray-500"
           >
-            Welcome to the AI Conference 2023 FAQ section. We&apos;re here to
-            address your most common queries and provide you with the
-            information you need to make the most of your conference experience.
+            If you have any questions that aren't answered here, please contact us using the contact information in the footer.
           </Typography>
         </div>
 
@@ -48,25 +47,34 @@ export function Faq({ faqs }: FaqProps) {
               </Typography>
             </div>
           ) : (
-            faqs.map((faq, key) => (
-              <Accordion
-                key={faq._id}
-                open={open === key + 1}
-                onClick={() => handleOpen(key + 1)}
-              >
-                <AccordionHeader className="text-left text-gray-900">
-                  {faq.question}
-                </AccordionHeader>
-                <AccordionBody>
-                  <Typography
-                    color="blue-gray"
-                    className="font-normal text-gray-500"
-                  >
-                    {faq.answer}
-                  </Typography>
-                </AccordionBody>
-              </Accordion>
-            ))
+            faqs.map((faq, key) => {
+              const isOpen = open === key + 1;
+              return (
+                <Accordion
+                  key={faq._id}
+                  open={isOpen}
+                  onClick={() => handleOpen(key + 1)}
+                >
+                  <AccordionHeader className="text-left text-gray-900">
+                    <div className="flex items-center justify-between w-full pr-4">
+                      <span>{faq.question}</span>
+                      <ChevronDownIcon
+                        className={`w-5 h-5 transition-transform duration-200 ${isOpen ? "transform rotate-180" : ""
+                          }`}
+                      />
+                    </div>
+                  </AccordionHeader>
+                  <AccordionBody>
+                    <Typography
+                      color="blue-gray"
+                      className="font-normal text-gray-500"
+                    >
+                      {faq.answer}
+                    </Typography>
+                  </AccordionBody>
+                </Accordion>
+              );
+            })
           )}
         </div>
       </div>
