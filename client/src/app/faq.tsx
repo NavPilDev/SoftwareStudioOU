@@ -35,7 +35,7 @@ export function Faq({ faqs }: FaqProps) {
             variant="lead"
             className="mx-auto mb-24 lg:w-3/5 !text-gray-500"
           >
-            If you have any questions that aren't answered here, please contact us using the contact information in the footer.
+            If you have any questions that aren&apos;t answered here, please contact us using the contact information in the footer.
           </Typography>
         </div>
 

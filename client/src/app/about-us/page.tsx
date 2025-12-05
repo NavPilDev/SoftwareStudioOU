@@ -8,6 +8,58 @@ import { client } from "@/sanity/client";
 import Image from "next/image";
 import { Navbar, Footer } from "@/components";
 
+// Utility function to convert URLs in text to clickable links and preserve line breaks
+const LinkifyText = ({ text }: { text: string }) => {
+    // URL regex pattern - matches http, https, www, and email addresses
+    const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
+
+    // Split text by newlines first
+    const lines = text.split(/\n/);
+
+    return (
+        <>
+            {lines.map((line, lineIndex) => {
+                // Process each line for URLs
+                const parts = line.split(urlRegex);
+
+                return (
+                    <React.Fragment key={lineIndex}>
+                        {parts.map((part, partIndex) => {
+                            // Check if this part is a URL
+                            if (urlRegex.test(part)) {
+                                let href = part;
+                                // Add https:// if it's a www link
+                                if (part.startsWith('www.')) {
+                                    href = `https://${part}`;
+                                }
+                                // Add mailto: if it's an email
+                                else if (part.includes('@')) {
+                                    href = `mailto:${part}`;
+                                }
+
+                                return (
+                                    <a
+                                        key={`${lineIndex}-${partIndex}`}
+                                        href={href}
+                                        target={part.includes('@') ? undefined : "_blank"}
+                                        rel={part.includes('@') ? undefined : "noopener noreferrer"}
+                                        className="text-blue-600 hover:text-blue-800 underline"
+                                    >
+                                        {part}
+                                    </a>
+                                );
+                            }
+                            return <span key={`${lineIndex}-${partIndex}`}>{part}</span>;
+                        })}
+                        {/* Add line break after each line except the last one */}
+                        {lineIndex < lines.length - 1 && <br />}
+                    </React.Fragment>
+                );
+            })}
+        </>
+    );
+};
+
 // Get config - fallback to hardcoded values if config() doesn't work
 let projectId: string | undefined;
 let dataset: string | undefined;
@@ -134,7 +186,7 @@ export default function AboutUsPage() {
                                                                 variant="lead"
                                                                 className="font-normal !text-gray-600"
                                                             >
-                                                                {member.description}
+                                                                <LinkifyText text={member.description} />
                                                             </Typography>
                                                         </div>
                                                     </div>
