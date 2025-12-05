@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
+import Image from "next/image";
 
 const { projectId, dataset } = client.config();
 const urlFor = (source: SanityImageSource) =>
@@ -92,9 +93,11 @@ export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
                   } items-center gap-8 w-full`}
               >
                 <div className="flex-shrink-0 w-full md:w-1/3 max-w-xs">
-                  <img
+                  <Image
                     src={imageUrl || "/image/avatar1.jpg"}
                     alt={member.name}
+                    width={300}
+                    height={450}
                     className="w-full aspect-[2/3] rounded-lg object-cover shadow-lg"
                   />
                 </div>

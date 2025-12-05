@@ -174,7 +174,7 @@ export function Navbar({
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   return (
     <MTNavbar
@@ -207,9 +207,8 @@ export function Navbar({
           </button>
         )}
         <ul
-          className={`ml-10 hidden items-center gap-6 lg:flex ${
-            isScrolling ? "text-gray-900" : "text-white"
-          }`}
+          className={`ml-10 hidden items-center gap-6 lg:flex ${isScrolling ? "text-gray-900" : "text-white"
+            }`}
         >
           {NAV_MENU.map(({ name, icon: Icon, href }) => (
             <NavItem
@@ -219,10 +218,10 @@ export function Navbar({
                 name === "About"
                   ? scrollToAbout
                   : name === "Projects"
-                  ? scrollToProjects
-                  : name === "Home"
-                  ? scrollToHome
-                  : undefined
+                    ? scrollToProjects
+                    : name === "Home"
+                      ? scrollToHome
+                      : undefined
               }
             >
               <Icon className="h-5 w-5" />
@@ -264,12 +263,12 @@ export function Navbar({
                   name === "About"
                     ? scrollToAboutAndClose
                     : name === "Projects"
-                    ? scrollToProjectsAndClose
-                    : name === "Home"
-                    ? scrollToHomeAndClose
-                    : name === "Blog"
-                    ? navigateToBlogAndClose
-                    : undefined
+                      ? scrollToProjectsAndClose
+                      : name === "Home"
+                        ? scrollToHomeAndClose
+                        : name === "Blog"
+                          ? navigateToBlogAndClose
+                          : undefined
                 }
               >
                 <Icon className="h-5 w-5" />

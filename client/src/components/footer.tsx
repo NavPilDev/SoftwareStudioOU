@@ -12,7 +12,7 @@ export function Footer() {
             className="text-2xl md:text-3xl text-center font-bold "
             color="white"
           >
-            Join William Kerber's Software Studio OU!
+            Join OU William Kerber Software Studio!
           </Typography>
           <Typography
             color="white"
@@ -31,7 +31,7 @@ export function Footer() {
         </div>
         <div className="flex flex-col md:flex-row items-center !justify-between">
           <Typography as="a" href="#" variant="h6" className="text-gray-900">
-            William Kerber's Software Studio OU
+            OU William Kerber Software Studio
           </Typography>
           <ul className="flex justify-center my-4 md:my-0 w-max mx-auto items-center gap-4">
             {LINKS.map((link, index) => (
@@ -67,7 +67,7 @@ export function Footer() {
           color="blue-gray"
           className="text-center mt-12 font-normal !text-gray-700"
         >
-          &copy; {CURRENT_YEAR} William Kerber's Software Studio OU - University
+          &copy; {CURRENT_YEAR} OU William Kerber Software Studio - University
           of Oklahoma. A two-semester program for entrepreneurship and
           innovation.
         </Typography>
