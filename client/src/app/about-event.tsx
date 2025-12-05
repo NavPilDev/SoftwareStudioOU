@@ -1,50 +1,13 @@
 "use client";
 
-import { Typography } from "@material-tailwind/react";
-import AboutCard from "@/components/about-card";
-import React, { useState, useEffect } from "react";
-import imageUrlBuilder from "@sanity/image-url";
-import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import { client } from "@/sanity/client";
-import Image from "next/image";
-
-const { projectId, dataset } = client.config();
-const urlFor = (source: SanityImageSource) =>
-  projectId && dataset
-    ? imageUrlBuilder({ projectId, dataset }).image(source)
-    : null;
-
-export interface AdminTeamMemberItem {
-  _id: string;
-  name: string;
-  role: string;
-  description: string;
-  profilePicture?: SanityImageSource;
-  order?: number;
-}
+import { Typography, Button } from "@material-tailwind/react";
+import React from "react";
+import Link from "next/link";
 
 export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
   props,
   ref
 ) {
-  const [adminTeamMembers, setAdminTeamMembers] = useState<AdminTeamMemberItem[]>([]);
-
-  useEffect(() => {
-    async function fetchAdminTeamMembers() {
-      try {
-        const response = await fetch("/api/admin-team-members");
-        if (response.ok) {
-          const fetchedAdminTeamMembers = await response.json();
-          setAdminTeamMembers(fetchedAdminTeamMembers);
-        }
-      } catch (error) {
-        console.error("Error fetching admin team members:", error);
-        setAdminTeamMembers([]);
-      }
-    }
-    fetchAdminTeamMembers();
-  }, []);
-
   return (
     <section
       ref={ref}
@@ -69,59 +32,15 @@ export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
         entrepreneurship and innovation, while also making valuable connections
         along the way.
       </Typography>
-      <Typography variant="h3" className="text-center w-full mb-8" color="blue-gray">
-        About Us
-      </Typography>
-      <div className="mt-4 w-full space-y-12">
-        {adminTeamMembers.length === 0 ? (
-          <div className="text-center py-8">
-            <Typography color="gray" className="font-normal">
-              No admin team members available at this time.
-            </Typography>
-          </div>
-        ) : (
-          adminTeamMembers.map((member, idx) => {
-            const isEven = idx % 2 === 0;
-            const imageUrl = member.profilePicture
-              ? urlFor(member.profilePicture)?.width(300).height(450).url()
-              : "/image/avatar1.jpg";
-
-            return (
-              <div
-                key={member._id}
-                className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"
-                  } items-center gap-8 w-full`}
-              >
-                <div className="flex-shrink-0 w-full md:w-1/3 max-w-xs">
-                  <Image
-                    src={imageUrl || "/image/avatar1.jpg"}
-                    alt={member.name}
-                    width={300}
-                    height={450}
-                    className="w-full aspect-[2/3] rounded-lg object-cover shadow-lg"
-                  />
-                </div>
-                <div
-                  className={`flex-1 w-full md:w-2/3 ${isEven ? "md:text-left" : "md:text-right"
-                    } text-center md:text-left`}
-                >
-                  <Typography variant="h4" className="mb-2" color="blue-gray">
-                    {member.name}
-                  </Typography>
-                  <Typography variant="h6" className="mb-4" color="orange">
-                    {member.role}
-                  </Typography>
-                  <Typography
-                    variant="lead"
-                    className="font-normal !text-gray-600"
-                  >
-                    {member.description}
-                  </Typography>
-                </div>
-              </div>
-            );
-          })
-        )}
+      <div className="flex flex-col items-center gap-4 mt-8">
+        <Typography variant="h4" className="text-center" color="blue-gray">
+          Want to learn more about our team?
+        </Typography>
+        <Link href="/about-us">
+          <Button color="gray" size="lg">
+            Meet Our Team
+          </Button>
+        </Link>
       </div>
     </section>
   );

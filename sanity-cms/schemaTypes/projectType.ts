@@ -1,4 +1,4 @@
-import {defineField, defineType} from 'sanity'
+import { defineField, defineType } from 'sanity'
 
 export const projectType = defineType({
   name: 'project',
@@ -45,9 +45,9 @@ export const projectType = defineType({
       },
     }),
     defineField({
-      name: 'teamImage',
+      name: 'profilePicture',
       type: 'image',
-      title: 'Team Profile Picture',
+      title: 'Profile Picture',
       description: 'Profile picture for the team member/creator',
       options: {
         hotspot: true,

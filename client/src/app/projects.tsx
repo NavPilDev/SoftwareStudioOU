@@ -27,7 +27,7 @@ export interface ProjectItem {
   position: string;
   category: string;
   image?: SanityImageSource;
-  teamImage?: SanityImageSource;
+  profilePicture?: SanityImageSource;
   year: number;
   order?: number;
 }
@@ -159,8 +159,8 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
               ? urlFor(project.image)?.width(768).height(768).url()
               : "/image/avatar1.jpg";
 
-            const teamImageUrl = project.teamImage
-              ? urlFor(project.teamImage)?.width(200).height(200).url()
+            const profilePictureUrl = project.profilePicture
+              ? urlFor(project.profilePicture)?.width(200).height(200).url()
               : undefined;
 
             return (
@@ -172,7 +172,7 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
                 position={project.position || ""}
                 panel={project.category || ""}
                 img={imageUrl || "/image/avatar1.jpg"}
-                profileImg={teamImageUrl}
+                profileImg={profilePictureUrl}
               />
             );
           })
