@@ -48,10 +48,16 @@ export function Footer() {
             tech startup.
           </Typography>
           <div className="flex w-full md:w-fit gap-3 mt-2 flex-col md:flex-row">
-            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
-              <Button color="white" size="md">
-                Sign Up
-              </Button>
+            <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank" className="relative inline-block">
+              <div className="relative p-[2px] rounded-lg bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_100%] animate-rainbow-border">
+                <Button 
+                  color="white" 
+                  size="md"
+                  className="relative z-10 bg-white hover:bg-gray-50 transition-colors w-full"
+                >
+                  Sign Up
+                </Button>
+              </div>
             </a>
           </div>
         </div>

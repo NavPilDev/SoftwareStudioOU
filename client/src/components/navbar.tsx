@@ -59,6 +59,7 @@ const NAV_MENU = [
   {
     name: "About",
     icon: UserCircleIcon,
+    href: "/about-us",
   },
   {
     name: "Projects",
@@ -142,6 +143,11 @@ export function Navbar({
     }, 300);
   };
 
+  const navigateToAboutAndClose = () => {
+    router.push("/about-us");
+    closeMenu();
+  };
+
   const navigateToBlogAndClose = () => {
     router.push("/blog");
     closeMenu();
@@ -216,7 +222,7 @@ export function Navbar({
               href={href}
               onClick={
                 name === "About"
-                  ? scrollToAbout
+                  ? navigateToAboutAndClose
                   : name === "Projects"
                     ? scrollToProjects
                     : name === "Home"
@@ -261,7 +267,7 @@ export function Navbar({
                 href={href}
                 onClick={
                   name === "About"
-                    ? scrollToAboutAndClose
+                    ? navigateToAboutAndClose
                     : name === "Projects"
                       ? scrollToProjectsAndClose
                       : name === "Home"

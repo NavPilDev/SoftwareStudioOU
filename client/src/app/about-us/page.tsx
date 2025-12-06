@@ -133,6 +133,24 @@ export default function AboutUsPage() {
                         <Typography variant="h6" className="text-center mb-2 mt-3" color="orange">
                             About
                         </Typography>
+                        <Typography variant="h3" className="text-center" color="blue-gray">
+                            Why Join?
+                        </Typography>
+                        <div className="flex justify-center w-full">
+                            <Typography
+                                variant="lead"
+                                className="mt-2 lg:max-w-4xl mb-8 w-full text-center font-normal !text-gray-500"
+                            >
+                                William Kerber&apos;s Software Studio allows students to build real
+                                products, learn from industry leaders, and launch their tech startups.
+                                We have weekly sessions where we have guest speakers, workshops, and
+                                project building sessions. Software Studio takes place over two
+                                semesters. While this is a club, students can also take it for
+                                credit(see FAQ). Software Studio is a great way to get started in
+                                entrepreneurship and innovation, while also making valuable connections
+                                along the way.
+                            </Typography>
+                        </div>
                         <Typography variant="h3" className="text-center mb-12" color="blue-gray">
                             About Us
                         </Typography>
