@@ -161,7 +161,7 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
             </Typography>
             <Typography variant="lead" className="mb-8 !text-gray-600">
               Be part of the next generation of innovative projects. Sign up now
-              to participate in Software Studio OU {nextYear}.
+              to participate in OU William Kerber Software Studio {nextYear}.
             </Typography>
             <a
               href="https://forms.gle/PYWTVEEeprE7APmZ8"

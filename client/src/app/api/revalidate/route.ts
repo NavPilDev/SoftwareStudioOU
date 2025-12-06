@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
             revalidatePath("/api/projects");
             revalidatePath("/api/faqs");
             revalidatePath("/api/admin-team-members");
+            revalidatePath("/api/announcements");
             revalidatePath("/api/contact-info");
 
             return NextResponse.json({
@@ -71,6 +72,11 @@ export async function POST(request: NextRequest) {
                 revalidatePath("/");
                 break;
 
+            case "announcement":
+                revalidatePath("/api/announcements");
+                revalidatePath("/");
+                break;
+
             case "post":
                 // Revalidate blog listing page
                 revalidatePath("/blog");
@@ -89,6 +95,7 @@ export async function POST(request: NextRequest) {
                 revalidatePath("/api/projects");
                 revalidatePath("/api/faqs");
                 revalidatePath("/api/admin-team-members");
+                revalidatePath("/api/announcements");
                 revalidatePath("/api/contact-info");
         }
 

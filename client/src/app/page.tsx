@@ -9,6 +9,7 @@ import AboutEvent from "./about-event";
 import OurStats from "./our-stats";
 import Projects from "./projects";
 import Faq, { type FAQItem } from "./faq";
+import Announcements from "./announcements";
 import React, { useRef, useEffect, useState } from "react";
 
 export default function Portfolio() {
@@ -60,11 +61,15 @@ export default function Portfolio() {
         <Hero />
       </div>
       {/* <SponsoredBy /> */}
+      <div id="announcements">
+        <Announcements />
+      </div>
       <div id="about" ref={aboutRef}>
         <AboutEvent />
       </div>
       {/* <OurStats /> */}
-      <div id="projects" ref={projectsRef}>
+
+      <div id="projects" ref={projectsRef} className="scroll-mt-[100px]">
         <Projects />
       </div>
       <Faq faqs={faqs} />

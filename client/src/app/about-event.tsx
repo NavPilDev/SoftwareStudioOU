@@ -23,7 +23,7 @@ export const AboutEvent = React.forwardRef<HTMLDivElement>(function AboutEvent(
         variant="lead"
         className="mt-2 lg:max-w-4xl mb-8 w-full text-center font-normal !text-gray-500"
       >
-        William Kerber&apos;s Software Studio allows students to build real
+        OU William Kerber Software Studio allows students to build real
         products, learn from industry leaders, and launch their tech startups.
         We have weekly sessions where we have guest speakers, workshops, and
         project building sessions. Software Studio takes place over two
