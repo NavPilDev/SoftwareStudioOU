@@ -1,5 +1,5 @@
 import { client } from "@/sanity/client";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _createdAt asc) {
   _id,
@@ -14,10 +14,9 @@ const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _cre
   order
 }`;
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url);
-    const year = searchParams.get('year');
+    const year = request.nextUrl.searchParams.get('year');
 
     let query = PROJECTS_QUERY;
     if (year) {
