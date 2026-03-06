@@ -241,7 +241,7 @@ export function Navbar({
               Invest
             </Button>
           </a>
-          <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
+          <a href="https://forms.gle/kxRp7nDJwRV3YTVA8" target="_blank">
             <Button color={isScrolling ? "gray" : "white"}>Sign Up</Button>
           </a>
         </div>
@@ -291,7 +291,7 @@ export function Navbar({
               <Button variant="text">Invest</Button>
             </a>
             <a
-              href="https://forms.gle/PYWTVEEeprE7APmZ8"
+              href="https://forms.gle/kxRp7nDJwRV3YTVA8"
               target="_blank"
               onClick={closeMenu}
             >

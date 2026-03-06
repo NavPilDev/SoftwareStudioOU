@@ -43,7 +43,7 @@ export const Hero = React.forwardRef<HTMLDivElement>(function Hero(props, ref) {
               by faculty, mentors, and guest entrepreneurs
             </Typography>
             <div className="flex items-center gap-4 justify-center lg:justify-end">
-              <a href="https://forms.gle/PYWTVEEeprE7APmZ8" target="_blank">
+              <a href="https://forms.gle/kxRp7nDJwRV3YTVA8" target="_blank">
                 <Button variant="gradient" color="white">
                   SIGN UP
                 </Button>
