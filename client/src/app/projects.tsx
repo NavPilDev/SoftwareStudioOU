@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  Tab,
-  Tabs,
-  TabsHeader,
-  Typography,
-  Button,
-} from "@material-tailwind/react";
+import { Typography, Button } from "@material-tailwind/react";
 import EventContentCard from "@/components/event-content-card";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
@@ -49,16 +44,42 @@ export interface ProjectItem {
   order?: number;
 }
 
+type ProjectTab = { kind: "year"; year: number } | { kind: "join" };
+
+function computeInitialWindowStart(
+  tabsLength: number,
+  selectedIndex: number
+): number {
+  if (tabsLength <= 3) return 0;
+  const maxStart = tabsLength - 3;
+  const idealStart = selectedIndex - 1;
+  return Math.max(0, Math.min(idealStart, maxStart));
+}
+
 export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
   props,
   ref
 ) {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number | string | null>(
-    null
-  );
+  const [selectedYear, setSelectedYear] = useState<number | "join" | null>(null);
   const [availableYears, setAvailableYears] = useState<number[]>([]);
-  const [nextYear, setNextYear] = useState<number | null>(null);
+  const [windowStart, setWindowStart] = useState(0);
+
+  const projectTabs = useMemo((): ProjectTab[] => {
+    return [
+      ...availableYears.map((year) => ({ kind: "year" as const, year })),
+      { kind: "join" as const },
+    ];
+  }, [availableYears]);
+
+  const selectedIndex = useMemo(() => {
+    if (selectedYear === null) return -1;
+    if (selectedYear === "join")
+      return projectTabs.findIndex((t) => t.kind === "join");
+    return projectTabs.findIndex(
+      (t) => t.kind === "year" && t.year === selectedYear
+    );
+  }, [projectTabs, selectedYear]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -66,33 +87,28 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
         const response = await fetch("/api/projects");
         if (response.ok) {
           const fetchedProjects = await response.json();
-          // Debug: log first project to see image data structure
-          if (fetchedProjects.length > 0) {
-            console.log("Sample project data:", {
-              hasImage: !!fetchedProjects[0].image,
-              hasProfilePicture: !!fetchedProjects[0].profilePicture,
-              image: fetchedProjects[0].image,
-              profilePicture: fetchedProjects[0].profilePicture,
-            });
-          }
           setProjects(fetchedProjects);
 
-          // Extract unique years and sort them
           const years = Array.from<number>(
             new Set(fetchedProjects.map((p: ProjectItem) => p.year))
-          ).sort((a, b) => b - a);
+          ).sort((a, b) => a - b);
           setAvailableYears(years);
 
-          // Calculate next year (last tab year + 1)
-          const lastTabYear =
-            years.length > 0
-              ? years[years.length - 1]
-              : new Date().getFullYear();
-          setNextYear(lastTabYear + 1);
-
-          // Set default to most recent year
           if (years.length > 0) {
-            setSelectedYear(years[0]);
+            const calendarYear = new Date().getFullYear();
+            const defaultYear = years.includes(calendarYear)
+              ? calendarYear
+              : years[years.length - 1];
+
+            const tabs: ProjectTab[] = [
+              ...years.map((y) => ({ kind: "year" as const, year: y })),
+              { kind: "join" as const },
+            ];
+            const selIdx = tabs.findIndex(
+              (t) => t.kind === "year" && t.year === defaultYear
+            );
+            setSelectedYear(defaultYear);
+            setWindowStart(computeInitialWindowStart(tabs.length, selIdx));
           }
         }
       } catch (error) {
@@ -103,11 +119,62 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
     fetchProjects();
   }, []);
 
-  const isNextYearTab = selectedYear === "next-year";
+  const maxWindowStart = Math.max(0, projectTabs.length - 3);
+
+  const shiftWindow = (delta: -1 | 1) => {
+    const nw = Math.min(Math.max(windowStart + delta, 0), maxWindowStart);
+    let nextSelected = selectedYear;
+    if (selectedIndex >= 0 && projectTabs.length > 0) {
+      const visLen = Math.min(3, projectTabs.length - nw);
+      const lastVis = nw + visLen - 1;
+      if (selectedIndex < nw || selectedIndex > lastVis) {
+        const mid =
+          projectTabs[nw + Math.min(1, visLen - 1)] ?? projectTabs[nw];
+        nextSelected = mid.kind === "join" ? "join" : mid.year;
+      }
+    }
+    setWindowStart(nw);
+    setSelectedYear(nextSelected);
+  };
+
+  const onKeyDownStrip = (e: React.KeyboardEvent) => {
+    if (e.key === "ArrowLeft") {
+      e.preventDefault();
+      if (windowStart > 0) shiftWindow(-1);
+    } else if (e.key === "ArrowRight") {
+      e.preventDefault();
+      if (windowStart < maxWindowStart) shiftWindow(1);
+    }
+  };
+
+  const selectTab = (tab: ProjectTab) => {
+    if (tab.kind === "join") {
+      setSelectedYear("join");
+    } else {
+      setSelectedYear(tab.year);
+      const idx = projectTabs.findIndex(
+        (t) => t.kind === "year" && t.year === tab.year
+      );
+      setWindowStart(
+        computeInitialWindowStart(projectTabs.length, idx)
+      );
+    }
+  };
+
+  const isJoinTab = selectedYear === "join";
   const filteredProjects =
     selectedYear && typeof selectedYear === "number"
       ? projects.filter((p) => p.year === selectedYear)
       : [];
+
+  const joinHeadlineYear = new Date().getFullYear() + 1;
+  const visibleTabs = projectTabs.slice(
+    windowStart,
+    Math.min(windowStart + 3, projectTabs.length)
+  );
+
+  const canGoLeft = windowStart > 0;
+  const canGoRight = windowStart < maxWindowStart;
 
   return (
     <section
@@ -122,46 +189,88 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
           Projects
         </Typography>
       </div>
-      {(availableYears.length > 0 || nextYear) && (
-        <Tabs value={selectedYear?.toString() || ""} className="mb-8">
-          <div className="w-full flex mb-8 flex-col items-center">
-            <TabsHeader className="h-12 w-72 md:w-96">
-              {availableYears.map((year) => (
-                <Tab
-                  key={year}
-                  value={year.toString()}
-                  className="font-medium"
-                  onClick={() => setSelectedYear(year)}
-                >
-                  {year}
-                </Tab>
-              ))}
-              {nextYear && (
-                <Tab
-                  value="next-year"
-                  className="font-medium"
-                  onClick={() => setSelectedYear("next-year")}
-                >
-                  {nextYear}
-                </Tab>
-              )}
-            </TabsHeader>
+      {projectTabs.length > 0 && (
+        <div className="mb-8 w-full max-w-xl px-4">
+          <div
+            role="tablist"
+            tabIndex={0}
+            onKeyDown={onKeyDownStrip}
+            className="flex items-center justify-center gap-2 md:gap-4 outline-none focus-visible:ring-2 focus-visible:ring-blue-gray-400 rounded-lg py-1"
+          >
+            <button
+              type="button"
+              aria-label="Show earlier years"
+              disabled={!canGoLeft}
+              onClick={() => shiftWindow(-1)}
+              className="shrink-0 rounded-full p-2 text-blue-gray-700 transition enabled:hover:bg-blue-gray-50 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronLeftIcon className="h-6 w-6" aria-hidden />
+            </button>
+            <div className="flex flex-1 min-w-0 justify-center gap-1 sm:gap-2">
+              {visibleTabs.map((tab, i) => {
+                const globalIndex = windowStart + i;
+                const isSelected =
+                  tab.kind === "join"
+                    ? selectedYear === "join"
+                    : selectedYear === tab.year;
+                const isLeftEdge = i === 0 && globalIndex > 0;
+                const isRightEdge =
+                  i === visibleTabs.length - 1 &&
+                  globalIndex < projectTabs.length - 1;
+                const fadeEdge = isLeftEdge || isRightEdge;
+
+                const label = tab.kind === "join" ? "+" : String(tab.year);
+
+                return (
+                  <button
+                    key={
+                      tab.kind === "join"
+                        ? "join"
+                        : `year-${tab.year}-${globalIndex}`
+                    }
+                    type="button"
+                    role="tab"
+                    aria-selected={isSelected}
+                    onClick={() => selectTab(tab)}
+                    className={[
+                      "min-w-0 flex-1 max-w-[6.5rem] truncate rounded-lg px-3 py-2.5 text-center text-sm font-medium transition sm:px-4 sm:text-base",
+                      isSelected
+                        ? "bg-blue-gray-800 text-white shadow-md"
+                        : "bg-blue-gray-50 text-blue-gray-700 hover:bg-blue-gray-100",
+                      fadeEdge ? "opacity-50" : "opacity-100",
+                    ].join(" ")}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              aria-label="Show later years"
+              disabled={!canGoRight}
+              onClick={() => shiftWindow(1)}
+              className="shrink-0 rounded-full p-2 text-blue-gray-700 transition enabled:hover:bg-blue-gray-50 disabled:cursor-not-allowed disabled:opacity-30"
+            >
+              <ChevronRightIcon className="h-6 w-6" aria-hidden />
+            </button>
           </div>
-        </Tabs>
+        </div>
       )}
       <div className="mx-auto container">
-        {isNextYearTab ? (
+        {isJoinTab ? (
           <div className="text-center py-16 max-w-2xl mx-auto">
             <Typography
               variant="h3"
               color="blue-gray"
               className="mb-4 font-bold"
             >
-              Join Us in {nextYear}!
+              Join Us in {joinHeadlineYear}!
             </Typography>
             <Typography variant="lead" className="mb-8 !text-gray-600">
               Be part of the next generation of innovative projects. Sign up now
-              to participate in OU William Kerber Software Studio {nextYear}.
+              to participate in OU William Kerber Software Studio{" "}
+              {joinHeadlineYear}.
             </Typography>
             <a
               href="https://forms.gle/PYWTVEEeprE7APmZ8"
@@ -188,10 +297,17 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
             let profilePictureUrl: string | undefined = undefined;
             if (project.profilePicture) {
               try {
-                const url = urlFor(project.profilePicture)?.width(200).height(200).url();
+                const url = urlFor(project.profilePicture)
+                  ?.width(200)
+                  .height(200)
+                  .url();
                 profilePictureUrl = url || undefined;
               } catch (error) {
-                console.error("Error building profile picture URL:", error, project.profilePicture);
+                console.error(
+                  "Error building profile picture URL:",
+                  error,
+                  project.profilePicture
+                );
               }
             }
 
