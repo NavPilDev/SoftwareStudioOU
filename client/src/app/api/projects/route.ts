@@ -1,6 +1,8 @@
 import { client } from "@/sanity/client";
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _createdAt asc) {
   _id,
   title,
