@@ -6,6 +6,7 @@ export const dynamic = "force-dynamic";
 const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _createdAt asc) {
   _id,
   title,
+  tagline,
   description,
   name,
   position,
@@ -25,6 +26,7 @@ export async function GET(request: NextRequest) {
       query = `*[_type == "project" && year == ${year}] | order(order asc, _createdAt asc) {
         _id,
         title,
+        tagline,
         description,
         name,
         position,

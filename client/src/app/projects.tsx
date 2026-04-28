@@ -34,6 +34,7 @@ const urlFor = (source: SanityImageSource) => {
 export interface ProjectItem {
   _id: string;
   title: string;
+  tagline?: string;
   description: string;
   name: string;
   position: string;
@@ -318,7 +319,7 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
                 des={project.description || ""}
                 name={project.name || ""}
                 position={project.position || ""}
-                panel={project.category || ""}
+                panel={project.tagline || project.category || ""}
                 img={imageUrl || "/image/avatar1.jpg"}
                 profileImg={profilePictureUrl}
               />
