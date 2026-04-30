@@ -363,9 +363,41 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
               target="_blank"
               rel="noopener noreferrer"
             >
-              <Button color="gray" size="lg" className="mt-4">
-                Sign Up Now
-              </Button>
+              <div className="mt-4 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Button color="gray" size="lg">
+                  Sign Up Now
+                </Button>
+                <span
+                  aria-hidden
+                  className="hidden select-none text-blue-gray-400 sm:inline"
+                >
+                  |
+                </span>
+                <a
+                  href="https://discord.gg/BUyTfQ9SBE"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Join our Discord"
+                >
+                  <Button
+                    size="lg"
+                    className="flex items-center gap-2 bg-[#5865F2] text-white shadow-md hover:bg-[#4752C4] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5865F2]/60"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                      aria-hidden="true"
+                      focusable="false"
+                      className="shrink-0"
+                    >
+                      <path d="M20.317 4.3698a19.7913 19.7913 0 0 0-4.8851-1.5152.0741.0741 0 0 0-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495a18.2687 18.2687 0 0 0-5.4872 0c-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 0 0-.0785-.037 19.7363 19.7363 0 0 0-4.8852 1.515.0699.0699 0 0 0-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 0 0 .0312.0561 19.9004 19.9004 0 0 0 5.9937 3.0452.0777.0777 0 0 0 .0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 0 0-.0416-.1057 13.176 13.176 0 0 1-1.8722-.8923.077.077 0 0 1-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 0 1 .0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 0 1 .0785.0095c.1202.0991.246.1981.372.2924a.077.077 0 0 1-.0066.1277 12.299 12.299 0 0 1-1.873.8914.0766.0766 0 0 0-.0407.1067c.3604.698.7719 1.3628 1.2251 1.9932a.076.076 0 0 0 .0842.0286 19.8392 19.8392 0 0 0 6.0023-3.0452.077.077 0 0 0 .0303-.0552c.5004-5.177.838-9.6739-2.5585-13.6604a.061.061 0 0 0-.0312-.0286ZM8.02 15.3312c-1.1838 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.1569-2.4189 1.2108 0 2.175 1.0942 2.1569 2.419 0 1.3332-.9555 2.419-2.1569 2.419Zm7.9748 0c-1.1838 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.1569-2.4189 1.2108 0 2.175 1.0942 2.1569 2.419 0 1.3332-.9465 2.419-2.1569 2.419Z" />
+                    </svg>
+                    Join the Discord
+                  </Button>
+                </a>
+              </div>
             </a>
           </div>
         ) : filteredProjects.length === 0 ? (
