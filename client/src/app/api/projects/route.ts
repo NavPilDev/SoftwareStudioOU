@@ -14,31 +14,33 @@ const PROJECTS_QUERY = `*[_type == "project"] | order(year desc, order asc, _cre
   image,
   profilePicture,
   year,
+  batch,
   order
 }`;
 
 export async function GET(request: NextRequest) {
   try {
-    const year = request.nextUrl.searchParams.get('year');
+    const year = request.nextUrl.searchParams.get("year");
+    const yearNumber = year ? Number.parseInt(year, 10) : null;
 
-    let query = PROJECTS_QUERY;
-    if (year) {
-      query = `*[_type == "project" && year == ${year}] | order(order asc, _createdAt asc) {
-        _id,
-        title,
-        tagline,
-        description,
-        name,
-        position,
-        category,
-        image,
-        profilePicture,
-        year,
-        order
-      }`;
-    }
+    const query = yearNumber !== null && Number.isFinite(yearNumber)
+      ? `*[_type == "project" && year == $year] | order(order asc, _createdAt asc) {
+          _id,
+          title,
+          tagline,
+          description,
+          name,
+          position,
+          category,
+          image,
+          profilePicture,
+          year,
+          batch,
+          order
+        }`
+      : PROJECTS_QUERY;
 
-    const projects = await client.fetch(query, {}, {
+    const projects = await client.fetch(query, yearNumber !== null && Number.isFinite(yearNumber) ? { year: yearNumber } : {}, {
       next: { revalidate: 30 }
     });
     return NextResponse.json(projects);

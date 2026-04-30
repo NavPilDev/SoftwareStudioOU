@@ -42,10 +42,41 @@ export interface ProjectItem {
   image?: SanityImageSource;
   profilePicture?: SanityImageSource;
   year: number;
+  batch: "Spring" | "Fall";
   order?: number;
 }
 
-type ProjectTab = { kind: "year"; year: number } | { kind: "join" };
+type ProjectTab = { kind: "batch"; key: string; batch: Batch } | { kind: "join" };
+
+type Batch = { year: number; season: "Spring" | "Fall" };
+
+function seasonToIndex(season: Batch["season"]): number {
+  return season === "Spring" ? 0 : 1;
+}
+
+function compareBatches(a: Batch, b: Batch): number {
+  if (a.year !== b.year) return a.year - b.year;
+  return seasonToIndex(a.season) - seasonToIndex(b.season);
+}
+
+function nextBatch(after: Batch): Batch {
+  if (after.season === "Spring") return { year: after.year, season: "Fall" };
+  return { year: after.year + 1, season: "Spring" };
+}
+
+function inferCurrentSeason(d: Date): Batch["season"] {
+  // Rough split: Jan–Jun => Spring, Jul–Dec => Fall
+  return d.getMonth() < 6 ? "Spring" : "Fall";
+}
+
+function formatBatch(b: Batch): string {
+  return `${b.season} ${b.year}`;
+}
+
+function formatBatchRange(start: Batch): string {
+  const end = nextBatch(start);
+  return `${formatBatch(start)} - ${formatBatch(end)}`;
+}
 
 function computeInitialWindowStart(
   tabsLength: number,
@@ -62,25 +93,30 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
   ref
 ) {
   const [projects, setProjects] = useState<ProjectItem[]>([]);
-  const [selectedYear, setSelectedYear] = useState<number | "join" | null>(null);
-  const [availableYears, setAvailableYears] = useState<number[]>([]);
+  const [selectedBatch, setSelectedBatch] = useState<Batch | "join" | null>(null);
+  const [availableBatches, setAvailableBatches] = useState<Batch[]>([]);
   const [windowStart, setWindowStart] = useState(0);
 
   const projectTabs = useMemo((): ProjectTab[] => {
     return [
-      ...availableYears.map((year) => ({ kind: "year" as const, year })),
+      ...availableBatches.map((b) => ({
+        kind: "batch" as const,
+        key: `${b.season}-${b.year}`,
+        batch: b,
+      })),
       { kind: "join" as const },
     ];
-  }, [availableYears]);
+  }, [availableBatches]);
 
   const selectedIndex = useMemo(() => {
-    if (selectedYear === null) return -1;
-    if (selectedYear === "join")
+    if (selectedBatch === null) return -1;
+    if (selectedBatch === "join")
       return projectTabs.findIndex((t) => t.kind === "join");
+    const key = `${selectedBatch.season}-${selectedBatch.year}`;
     return projectTabs.findIndex(
-      (t) => t.kind === "year" && t.year === selectedYear
+      (t) => t.kind === "batch" && t.key === key
     );
-  }, [projectTabs, selectedYear]);
+  }, [projectTabs, selectedBatch]);
 
   useEffect(() => {
     async function fetchProjects() {
@@ -90,25 +126,41 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
           const fetchedProjects = await response.json();
           setProjects(fetchedProjects);
 
-          const years = Array.from<number>(
-            new Set(fetchedProjects.map((p: ProjectItem) => p.year))
-          ).sort((a, b) => a - b);
-          setAvailableYears(years);
+          const batches: Batch[] = Array.from(
+            new Map<string, Batch>(
+              fetchedProjects.map((p: ProjectItem) => {
+                const b: Batch = { year: p.year, season: p.batch };
+                return [`${b.season}-${b.year}`, b] as const;
+              })
+            ).values()
+          ).sort(compareBatches);
+          setAvailableBatches(batches);
 
-          if (years.length > 0) {
-            const calendarYear = new Date().getFullYear();
-            const defaultYear = years.includes(calendarYear)
-              ? calendarYear
-              : years[years.length - 1];
+          if (batches.length > 0) {
+            const now = new Date();
+            const current: Batch = {
+              year: now.getFullYear(),
+              season: inferCurrentSeason(now),
+            };
+            const defaultBatch = batches.find(
+              (b) => b.year === current.year && b.season === current.season
+            )
+              ? current
+              : batches[batches.length - 1];
 
             const tabs: ProjectTab[] = [
-              ...years.map((y) => ({ kind: "year" as const, year: y })),
+              ...batches.map((b) => ({
+                kind: "batch" as const,
+                key: `${b.season}-${b.year}`,
+                batch: b,
+              })),
               { kind: "join" as const },
             ];
+            const defaultKey = `${defaultBatch.season}-${defaultBatch.year}`;
             const selIdx = tabs.findIndex(
-              (t) => t.kind === "year" && t.year === defaultYear
+              (t) => t.kind === "batch" && t.key === defaultKey
             );
-            setSelectedYear(defaultYear);
+            setSelectedBatch(defaultBatch);
             setWindowStart(computeInitialWindowStart(tabs.length, selIdx));
           }
         }
@@ -124,18 +176,22 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
 
   const shiftWindow = (delta: -1 | 1) => {
     const nw = Math.min(Math.max(windowStart + delta, 0), maxWindowStart);
-    let nextSelected = selectedYear;
+    let nextSelected = selectedBatch;
     if (selectedIndex >= 0 && projectTabs.length > 0) {
       const visLen = Math.min(3, projectTabs.length - nw);
       const lastVis = nw + visLen - 1;
       if (selectedIndex < nw || selectedIndex > lastVis) {
         const mid =
           projectTabs[nw + Math.min(1, visLen - 1)] ?? projectTabs[nw];
-        nextSelected = mid.kind === "join" ? "join" : mid.year;
+        if (mid.kind === "join") {
+          nextSelected = "join";
+        } else {
+          nextSelected = mid.batch;
+        }
       }
     }
     setWindowStart(nw);
-    setSelectedYear(nextSelected);
+    setSelectedBatch(nextSelected);
   };
 
   const onKeyDownStrip = (e: React.KeyboardEvent) => {
@@ -150,11 +206,11 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
 
   const selectTab = (tab: ProjectTab) => {
     if (tab.kind === "join") {
-      setSelectedYear("join");
+      setSelectedBatch("join");
     } else {
-      setSelectedYear(tab.year);
+      setSelectedBatch(tab.batch);
       const idx = projectTabs.findIndex(
-        (t) => t.kind === "year" && t.year === tab.year
+        (t) => t.kind === "batch" && t.key === tab.key
       );
       setWindowStart(
         computeInitialWindowStart(projectTabs.length, idx)
@@ -162,13 +218,38 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
     }
   };
 
-  const isJoinTab = selectedYear === "join";
+  const isJoinTab = selectedBatch === "join";
   const filteredProjects =
-    selectedYear && typeof selectedYear === "number"
-      ? projects.filter((p) => p.year === selectedYear)
+    selectedBatch && selectedBatch !== "join"
+      ? projects.filter(
+          (p) => p.year === selectedBatch.year && p.batch === selectedBatch.season
+        )
       : [];
 
-  const joinHeadlineYear = new Date().getFullYear() + 1;
+  const { joinHeadline, joinRange } = useMemo(() => {
+    const parsed: Batch[] = projects
+      .map((p) => ({
+        year: p.year,
+        season: p.batch,
+      }))
+      .filter((b) => Number.isFinite(b.year));
+
+    const last =
+      parsed.length > 0
+        ? parsed.reduce((acc, cur) => (compareBatches(acc, cur) >= 0 ? acc : cur))
+        : (() => {
+            const now = new Date();
+            return { year: now.getFullYear(), season: inferCurrentSeason(now) };
+          })();
+
+    const nb = nextBatch(last);
+    const fb = nextBatch(nb);
+
+    return {
+      joinHeadline: `Join us in ${nb.season} ${nb.year}`,
+      joinRange: `${nb.season} ${nb.year} - ${fb.season} ${fb.year}`,
+    };
+  }, [projects]);
   const visibleTabs = projectTabs.slice(
     windowStart,
     Math.min(windowStart + 3, projectTabs.length)
@@ -212,36 +293,41 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
                 const globalIndex = windowStart + i;
                 const isSelected =
                   tab.kind === "join"
-                    ? selectedYear === "join"
-                    : selectedYear === tab.year;
+                    ? selectedBatch === "join"
+                    : selectedBatch !== null &&
+                      selectedBatch !== "join" &&
+                      tab.key === `${selectedBatch.season}-${selectedBatch.year}`;
                 const isLeftEdge = i === 0 && globalIndex > 0;
                 const isRightEdge =
                   i === visibleTabs.length - 1 &&
                   globalIndex < projectTabs.length - 1;
                 const fadeEdge = isLeftEdge || isRightEdge;
 
-                const label = tab.kind === "join" ? "+" : String(tab.year);
+                const label =
+                  tab.kind === "join" ? "+" : formatBatchRange(tab.batch);
 
                 return (
                   <button
                     key={
                       tab.kind === "join"
                         ? "join"
-                        : `year-${tab.year}-${globalIndex}`
+                        : `batch-${tab.key}-${globalIndex}`
                     }
                     type="button"
                     role="tab"
                     aria-selected={isSelected}
                     onClick={() => selectTab(tab)}
                     className={[
-                      "min-w-0 flex-1 max-w-[6.5rem] truncate rounded-lg px-3 py-2.5 text-center text-sm font-medium transition sm:px-4 sm:text-base",
+                      "min-w-0 flex-1 rounded-lg px-3 py-2.5 text-center text-xs font-medium leading-snug transition sm:px-4 sm:text-sm",
                       isSelected
                         ? "bg-blue-gray-800 text-white shadow-md"
                         : "bg-blue-gray-50 text-blue-gray-700 hover:bg-blue-gray-100",
                       fadeEdge ? "opacity-50" : "opacity-100",
                     ].join(" ")}
                   >
-                    {label}
+                    <span className="block whitespace-normal break-words">
+                      {label}
+                    </span>
                   </button>
                 );
               })}
@@ -266,12 +352,11 @@ export const Projects = React.forwardRef<HTMLDivElement>(function Projects(
               color="blue-gray"
               className="mb-4 font-bold"
             >
-              Join Us in {joinHeadlineYear}!
+              {joinHeadline}
             </Typography>
             <Typography variant="lead" className="mb-8 !text-gray-600">
               Be part of the next generation of innovative projects. Sign up now
-              to participate in OU William Kerber Software Studio{" "}
-              {joinHeadlineYear}.
+              to participate in OU William Kerber Software Studio {joinRange}.
             </Typography>
             <a
               href="https://forms.gle/PYWTVEEeprE7APmZ8"

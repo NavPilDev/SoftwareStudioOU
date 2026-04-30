@@ -57,8 +57,22 @@ export const projectType = defineType({
       name: 'year',
       type: 'number',
       title: 'Year',
-      description: 'The year this project was created (e.g., 2025)',
-      validation: (rule) => rule.required().min(2020).max(2030),
+      description: 'The year this project was created (e.g., 2026)',
+      validation: (rule) => rule.required().min(2020).max(2099),
+    }),
+    defineField({
+      name: 'batch',
+      type: 'string',
+      title: 'Batch',
+      description: 'Which Software Studio batch this project belongs to',
+      options: {
+        list: [
+          { title: 'Spring', value: 'Spring' },
+          { title: 'Fall', value: 'Fall' },
+        ],
+        layout: 'radio',
+      },
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'order',
