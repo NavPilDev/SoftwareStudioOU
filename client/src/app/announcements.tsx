@@ -7,6 +7,7 @@ import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 import { client } from "@/sanity/client";
 import Image from "next/image";
 import { PortableText } from "next-sanity";
+import Link from "next/link";
 
 // Get config - fallback to hardcoded values if config() doesn't work
 let projectId: string | undefined;
@@ -43,8 +44,13 @@ export interface AnnouncementItem {
     order?: number;
 }
 
-export const Announcements = React.forwardRef<HTMLDivElement>(function Announcements(
-    props,
+type AnnouncementsProps = {
+    limit?: number;
+    showViewAllLink?: boolean;
+};
+
+export const Announcements = React.forwardRef<HTMLDivElement, AnnouncementsProps>(function Announcements(
+    { limit, showViewAllLink },
     ref
 ) {
     const [announcements, setAnnouncements] = useState<AnnouncementItem[]>([]);
@@ -52,7 +58,11 @@ export const Announcements = React.forwardRef<HTMLDivElement>(function Announcem
     useEffect(() => {
         async function fetchAnnouncements() {
             try {
-                const response = await fetch("/api/announcements");
+                const url =
+                    typeof limit === "number" && Number.isFinite(limit) && limit > 0
+                        ? `/api/announcements?limit=${encodeURIComponent(String(limit))}`
+                        : "/api/announcements";
+                const response = await fetch(url);
                 if (response.ok) {
                     const fetchedAnnouncements = await response.json();
                     setAnnouncements(fetchedAnnouncements);
@@ -73,9 +83,19 @@ export const Announcements = React.forwardRef<HTMLDivElement>(function Announcem
             <Typography variant="h6" className="text-center mb-2" color="orange">
                 Announcements
             </Typography>
-            <Typography variant="h3" className="text-center mb-8" color="blue-gray">
-                Latest Updates
-            </Typography>
+            <div className="w-full max-w-7xl flex flex-col items-center">
+                <Typography variant="h3" className="text-center mb-3" color="blue-gray">
+                    Latest Updates
+                </Typography>
+                {showViewAllLink && (
+                    <Link
+                        href="/blog"
+                        className="mb-6 text-sm font-medium text-blue-600 hover:text-blue-800 underline"
+                    >
+                        View all announcements
+                    </Link>
+                )}
+            </div>
             {announcements.length === 0 ? (
                 <div className="text-center py-8">
                     <Typography color="gray" className="font-normal">
@@ -86,21 +106,29 @@ export const Announcements = React.forwardRef<HTMLDivElement>(function Announcem
                 <div className="flex flex-col gap-8 w-full max-w-7xl">
                     {announcements.map((announcement) => {
                         const imageUrl = announcement.imagePreview
-                            ? urlFor(announcement.imagePreview)?.width(800).height(600).url()
+                            ? urlFor(announcement.imagePreview)
+                                  ?.width(800)
+                                  .fit("max")
+                                  .url()
                             : null;
 
                         return (
                             <Card key={announcement._id} className="shadow-lg hover:shadow-xl transition-shadow">
                                 <div className="flex flex-col md:flex-row">
                                     {imageUrl && (
-                                        <CardHeader floated={false} className="md:w-1/3 h-64 md:h-auto shrink-0 p-0 overflow-hidden">
-                                            <Image
-                                                src={imageUrl}
-                                                alt={announcement.title}
-                                                width={800}
-                                                height={600}
-                                                className="w-full h-full object-cover"
-                                            />
+                                        <CardHeader
+                                            floated={false}
+                                            className="md:w-1/3 shrink-0 p-0 overflow-hidden bg-white"
+                                        >
+                                            <div className="relative w-full aspect-[3/4]">
+                                                <Image
+                                                    src={imageUrl}
+                                                    alt={announcement.title}
+                                                    fill
+                                                    sizes="(min-width: 768px) 33vw, 100vw"
+                                                    className="object-contain"
+                                                />
+                                            </div>
                                         </CardHeader>
                                     )}
                                     <CardBody className="flex flex-col justify-between flex-grow">

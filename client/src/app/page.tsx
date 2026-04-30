@@ -62,7 +62,7 @@ export default function Portfolio() {
       </div>
       {/* <SponsoredBy /> */}
       <div id="announcements">
-        <Announcements />
+        <Announcements limit={2} showViewAllLink />
       </div>
       <div id="about" ref={aboutRef}>
         <AboutEvent />

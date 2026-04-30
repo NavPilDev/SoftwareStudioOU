@@ -1,9 +1,9 @@
 import { client } from "@/sanity/client";
 import imageUrlBuilder from "@sanity/image-url";
 import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
-import Link from "next/link";
 import { Navbar, Footer } from "@/components";
 import BlogCard from "@/components/blog-card";
+import Announcements from "@/app/announcements";
 
 const POSTS_QUERY = `*[_type == "post"] | order(publishedAt desc) {
   _id,
@@ -45,6 +45,10 @@ export default async function BlogPage() {
               Stay updated with the latest news, insights, and stories from
               Software Studio OU
             </p>
+          </div>
+
+          <div className="mb-20">
+            <Announcements />
           </div>
 
           {posts.length === 0 ? (
